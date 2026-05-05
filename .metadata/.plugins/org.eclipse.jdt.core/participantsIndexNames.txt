@@ -1,5 +1,0 @@
-INDEX VERSION 1.134
-C:\Users\sai kurapati\eclipse-workspace\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\3836202215.index
-\InventorySimple\src\main\java
-C:\Users\sai kurapati\eclipse-workspace\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\1872016331.index
-\InventoryApp\src

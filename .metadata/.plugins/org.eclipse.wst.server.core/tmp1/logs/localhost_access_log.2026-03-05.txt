@@ -1,8 +1,0 @@
-127.0.0.1 - - [05/Mar/2026:14:56:36 +0530] "GET / HTTP/1.1" 404 752
-0:0:0:0:0:0:0:1 - - [05/Mar/2026:14:56:37 +0530] "GET /InventorySimple/ HTTP/1.1" 200 1599
-0:0:0:0:0:0:0:1 - - [05/Mar/2026:14:56:37 +0530] "GET /favicon.ico HTTP/1.1" 404 763
-0:0:0:0:0:0:0:1 - - [05/Mar/2026:14:56:49 +0530] "POST /InventorySimple/LoginServlet HTTP/1.1" 302 -
-0:0:0:0:0:0:0:1 - - [05/Mar/2026:14:56:51 +0530] "GET /InventorySimple/ViewProductsServlet HTTP/1.1" 200 6139
-0:0:0:0:0:0:0:1 - - [05/Mar/2026:14:56:58 +0530] "GET /InventorySimple/addProduct.jsp HTTP/1.1" 200 2064
-0:0:0:0:0:0:0:1 - - [05/Mar/2026:14:57:00 +0530] "GET /InventorySimple/ViewProductsServlet HTTP/1.1" 200 6139
-0:0:0:0:0:0:0:1 - - [05/Mar/2026:14:57:02 +0530] "GET /InventorySimple/EditProductServlet?id=15 HTTP/1.1" 200 1517
