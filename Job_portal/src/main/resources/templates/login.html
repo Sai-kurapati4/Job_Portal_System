@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html th:replace="~{layout :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>Login - JobPortal</title>
+</head>
+<body>
+    <section class="fade-in" style="max-width: 400px; margin: 4rem auto;">
+        <div class="glass-card">
+            <h2 style="text-align: center; margin-bottom: 2rem;">Welcome Back</h2>
+            
+            <div th:if="${param.error}" class="badge badge-red" style="padding: 1rem; margin-bottom: 1rem; width: 100%; text-align: center;">
+                Invalid username or password.
+            </div>
+            <div th:if="${param.logout}" class="badge badge-blue" style="padding: 1rem; margin-bottom: 1rem; width: 100%; text-align: center;">
+                You have been logged out.
+            </div>
+            <div th:if="${param.success}" class="badge badge-green" style="padding: 1rem; margin-bottom: 1rem; width: 100%; text-align: center;">
+                Registration successful! Please login.
+            </div>
+
+            <form th:action="@{/login}" method="post">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" name="username" class="form-control" placeholder="Enter your username" required autofocus>
+                </div>
+                
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" name="password" class="form-control" placeholder="••••••••" required>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Login</button>
+            </form>
+            
+            <p style="text-align: center; margin-top: 1.5rem; color: var(--text-muted);">
+                Don't have an account? <a th:href="@{/register}" style="color: var(--primary-color);">Register here</a>
+            </p>
+        </div>
+    </section>
+</body>
+</html>
