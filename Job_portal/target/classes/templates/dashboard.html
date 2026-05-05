@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html th:replace="~{layout :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>Dashboard - JobPortal</title>
+</head>
+<body>
+    <section class="fade-in">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+            <h2><i class="fas fa-columns" style="color: var(--primary-color);"></i> My Dashboard</h2>
+            <div sec:authorize="hasAnyRole('EMPLOYER', 'ADMIN')">
+                <a th:href="@{/employer/post-job}" class="btn btn-primary"><i class="fas fa-plus"></i> Post New Job</a>
+            </div>
+        </div>
+
+        <div sec:authorize="hasAnyRole('EMPLOYER', 'ADMIN')">
+            <div class="glass-card">
+                <h3>Your Posted Jobs</h3>
+                
+                <div th:if="${param.jobPosted}" class="badge badge-green" style="padding: 1rem; margin: 1rem 0; display: block; text-align: center;">
+                    Job successfully posted!
+                </div>
+                <div th:if="${param.jobDeleted}" class="badge badge-blue" style="padding: 1rem; margin: 1rem 0; display: block; text-align: center;">
+                    Job successfully deleted.
+                </div>
+
+                <div th:if="${#lists.isEmpty(postedJobs)}" style="padding: 2rem; text-align: center; color: var(--text-muted);">
+                    You haven't posted any jobs yet.
+                </div>
+
+                <div style="overflow-x: auto;" th:unless="${#lists.isEmpty(postedJobs)}">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Job Title</th>
+                                <th>Category</th>
+                                <th>Posted Date</th>
+                                <th>Deadline</th>
+                                <th>Applicants</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="job : ${postedJobs}">
+                                <td style="font-weight: 500;">
+                                    <a th:href="@{/jobs/{id}(id=${job.id})}" th:text="${job.title}" style="color: white; text-decoration: none;"></a>
+                                </td>
+                                <td><span class="badge badge-blue" th:text="${job.category}"></span></td>
+                                <td th:text="${#temporals.format(job.postedAt, 'dd MMM yyyy')}"></td>
+                                <td th:text="${job.applicationDeadline != null ? #temporals.format(job.applicationDeadline, 'dd MMM yyyy') : 'No Deadline'}"></td>
+                                <td>
+                                    <span class="badge badge-purple" th:text="${#lists.size(job.applications) + ' Applied'}"></span>
+                                </td>
+                                <td>
+                                    <div style="display: flex; gap: 0.5rem;">
+                                        <a th:href="@{/employer/applicants/{id}(id=${job.id})}" class="btn btn-outline" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;">View Applicants</a>
+                                        <form th:action="@{/employer/delete-job/{id}(id=${job.id})}" method="post" onsubmit="return confirm('Are you sure you want to delete this job?');">
+                                            <button type="submit" class="btn btn-danger" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;"><i class="fas fa-trash"></i></button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div sec:authorize="hasRole('STUDENT')">
+            <div class="glass-card">
+                <h3>Your Applications</h3>
+                
+                <div th:if="${param.applied}" class="badge badge-green" style="padding: 1rem; margin: 1rem 0; display: block; text-align: center;">
+                    Your application has been submitted successfully!
+                </div>
+
+                <div th:if="${#lists.isEmpty(applications)}" style="padding: 2rem; text-align: center; color: var(--text-muted);">
+                    You haven't applied to any jobs yet. <a th:href="@{/jobs}" style="color: var(--primary-color);">Browse jobs</a>
+                </div>
+
+                <div style="overflow-x: auto;" th:unless="${#lists.isEmpty(applications)}">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Job Title</th>
+                                <th>Company</th>
+                                <th>Applied Date</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="app : ${applications}">
+                                <td style="font-weight: 500;">
+                                    <a th:href="@{/jobs/{id}(id=${app.job.id})}" th:text="${app.job.title}" style="color: white; text-decoration: none;"></a>
+                                </td>
+                                <td th:text="${app.job.employer.fullName}"></td>
+                                <td th:text="${#temporals.format(app.appliedAt, 'dd MMM yyyy')}"></td>
+                                <td>
+                                    <span th:if="${app.status == 'APPLIED'}" class="badge badge-blue">Applied</span>
+                                    <span th:if="${app.status == 'SHORTLISTED'}" class="badge badge-green">Shortlisted</span>
+                                    <span th:if="${app.status == 'REJECTED'}" class="badge badge-red">Rejected</span>
+                                </td>
+                                <td>
+                                    <a th:href="@{/jobs/{id}(id=${app.job.id})}" class="btn btn-outline" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;">View Job</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
