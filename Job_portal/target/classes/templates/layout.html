@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html th:fragment="layout(title, content)" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:replace="${title}">JobPortal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/index.css}">
+</head>
+<body>
+    <nav class="navbar">
+        <a th:href="@{/}" class="nav-brand">
+            <i class="fas fa-briefcase" style="color: var(--primary-color);"></i>
+            <span>JobPortal</span>
+        </a>
+        <div class="nav-links">
+            <a th:href="@{/jobs}" class="nav-link">Browse Jobs</a>
+            
+            <span sec:authorize="isAuthenticated()">
+                <a th:href="@{/dashboard}" class="nav-link" style="margin-right: 15px;"><i class="fas fa-columns"></i> Dashboard</a>
+                <span style="color: var(--text-muted); margin-right: 15px;">
+                    Hi, <span sec:authentication="name" style="color: white; font-weight: 500;"></span>
+                </span>
+                <form th:action="@{/logout}" method="post" style="display: inline;">
+                    <button type="submit" class="btn btn-outline" style="padding: 0.4rem 1rem;">Logout</button>
+                </form>
+            </span>
+            
+            <span sec:authorize="!isAuthenticated()">
+                <a th:href="@{/login}" class="nav-link">Login</a>
+                <a th:href="@{/register}" class="btn btn-primary">Register</a>
+            </span>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div th:replace="${content}"></div>
+    </main>
+
+    <!-- Innovation Module: Chatbot Widget -->
+    <button id="chatbot-toggle" onclick="toggleChatbot()">
+        <i class="fas fa-comment-dots"></i>
+    </button>
+    <div id="chatbot-widget">
+        <div class="chat-header">
+            <span><i class="fas fa-robot"></i> JobPortal Assistant</span>
+            <i class="fas fa-times" style="cursor:pointer;" onclick="toggleChatbot()"></i>
+        </div>
+        <div class="chat-body" id="chat-body">
+            <div class="chat-message bot-message">
+                Hello! I'm your JobPortal AI assistant. How can I help you today?
+            </div>
+        </div>
+        <div class="chat-input-area">
+            <input type="text" id="chat-input" placeholder="Type a message..." onkeypress="handleChatKeyPress(event)">
+            <button onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+    <script>
+        function toggleChatbot() {
+            document.getElementById('chatbot-widget').classList.toggle('open');
+            document.getElementById('chatbot-toggle').style.display = 
+                document.getElementById('chatbot-widget').classList.contains('open') ? 'none' : 'flex';
+        }
+
+        function handleChatKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chat-input');
+            const message = input.value.trim();
+            if (!message) return;
+
+            const chatBody = document.getElementById('chat-body');
+            
+            // Add user message
+            chatBody.innerHTML += `<div class="chat-message user-message">${message}</div>`;
+            input.value = '';
+            chatBody.scrollTop = chatBody.scrollHeight;
+
+            // Simple bot logic
+            setTimeout(() => {
+                let response = "I'm sorry, I don't understand that yet. Try asking about 'jobs', 'register', or 'apply'.";
+                let lowerMsg = message.toLowerCase();
+                
+                if(lowerMsg.includes('hello') || lowerMsg.includes('hi')) {
+                    response = "Hi there! Ready to find your dream job or ideal candidate?";
+                } else if(lowerMsg.includes('job') || lowerMsg.includes('browse')) {
+                    response = "You can browse all available jobs by clicking 'Browse Jobs' in the top navigation bar.";
+                } else if(lowerMsg.includes('apply')) {
+                    response = "To apply, go to a job's details page and click 'Apply Now'. Make sure your resume is ready!";
+                } else if(lowerMsg.includes('register') || lowerMsg.includes('account')) {
+                    response = "Click 'Register' in the top right. We use a secure OTP email verification process.";
+                } else if(lowerMsg.includes('employer') || lowerMsg.includes('post')) {
+                    response = "Employers can register an account and then post jobs directly from their Dashboard.";
+                }
+
+                chatBody.innerHTML += `<div class="chat-message bot-message">${response}</div>`;
+                chatBody.scrollTop = chatBody.scrollHeight;
+            }, 600);
+        }
+    </script>
+</body>
+</html>
